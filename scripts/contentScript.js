@@ -6,43 +6,31 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   function modifyDOM() {
     
-    const paragraphs = document.getElementsByTagName('p');
-    modifyElementsContent(paragraphs);
+    modifyTextNodes(document.body);
 
   }
 
-  function modifyElementsContent(elements) {
+  function modifyTextNodes(node) {
 
-    const modifiedContent = [];
+    // Check if nodeType is textNode
+    if (node.nodeType === 3) {
+      const modifiedText = modifyWords(node.textContent.trim().split(" "));
+      const span = document.createElement('span');
+      span.innerHTML = modifiedText;
+      node.parentNode.replaceChild(span, node);
 
-    for (let i = 0, len = elements.length; i < len; i++) {
-      const element = elements[i];
-
-      // Check if element has <noscript> child
-      if (checkChildren(element)) {
-        continue;
-      }
-
-      const elementContent = element.textContent.trim().split(" ");
-      let newElementContent = modifyWords(elementContent);
-      modifiedContent.push(newElementContent)
-      
-    }
-
-    for (let i = 0, len = elements.length; i < len; i++) {
-      elements[i].innerHTML = modifiedContent[i];
+    } else {
+      node.childNodes.forEach(function(childNode) {
+        modifyElementsContent(childNode);
+      });
     }
 
   }
 
-  function checkChildren(element) {
-    return Array.from(element.children).some(child => child.tagName.toLowerCase() === 'noscript');
-  }
+  function modifyWords(textNode) {
 
-  function modifyWords(element) {
-    let newElement = '';
-
-    element.forEach(function (item) {
+    let modifiedText = '';
+    textNode.forEach(function (item) {
       let boldWord = '';
     
       if (item.length == 1) {
@@ -59,8 +47,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       }
       
-      newElement += boldWord + ' ';
+      modifiedText += boldWord + ' ';
     });
 
-    return newElement
+    return modifiedText
   }
