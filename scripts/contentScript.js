@@ -64,5 +64,3 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     return newElement
   }
-
-document.addEventListener('DOMContentLoaded', modifyDOM);
