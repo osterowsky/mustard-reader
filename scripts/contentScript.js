@@ -26,7 +26,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   function modifyTextNodes(node) {
 
-    // Check if nodeType is textNode
+    // Check if nodeType is textNode.
     if (node.nodeType === 3) {
       const modifiedText = modifyWords(node.textContent.trim().split(" "));
       const span = document.createElement('span');
@@ -43,7 +43,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   function modifyWords(textNode) {
 
-    // If text consists just one word, does not make sense to change it
+    // If text consists just one word, does not make sense to change it, because in some cases it produces bugs. 
     if (textNode.length == 1) {
       return textNode
     }
