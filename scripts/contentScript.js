@@ -1,4 +1,5 @@
 let turboVueEnabled = false;
+let originalContent = null;
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "toggleTurboVue") {
@@ -7,7 +8,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (turboVueEnabled) {
         modifyDOM();
       } else {
-        
+        restoreDOM();
       }
 
     }
@@ -15,6 +16,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   function modifyDOM() {
     
+    if (!originalContent) {
+      originalContent = document.body.innerHTML
+    }
+
     modifyTextNodes(document.body);
 
   }
@@ -64,5 +69,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       modifiedText += boldWord + ' ';
     });
 
-    return modifiedText
+    return modifiedText;
   }
+
+
+  function restoreDOM() {
+    if (originalContent) {
+      document.body.innerHTML = originalContent;
+      originalContent = null;
+    }
+  } 
