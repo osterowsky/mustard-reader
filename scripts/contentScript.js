@@ -78,7 +78,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         boldWord += `<span style="font-weight: 600;">${item.substr(0, item.length / 2)}</span><span style="font-weight: 400;">${item.substr(item.length / 2)}</span>`;
 
       } else {
-        boldWord += `<span style="font-weight: 600;">${item.substr(0, item.length / 2 + 1)}</span><span style="font-weight: 400;">${item.substr(item.length / 2 + 1)}</span>`;
+        boldWord += `<span style="font-weight: 600;">${item.substr(0, item.length / 2)}</span><span style="font-weight: 400;">${item.substr(item.length / 2)}</span>`;
 
       }
       
@@ -98,9 +98,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } 
 
   function checkParentNode(node) {
+    const tags = ["code", "noscript", "h1", "h2", "h3"]
     const parentNode = node.parentNode.tagName.toLowerCase();
-    if (parentNode === 'code' || parentNode === 'noscript') {
-      return false; // Skip text nodes inside <code> or <noscript>.
+
+    if (tags.includes(parentNode)) {
+      return false; // Skip text nodes inside tags, which shouldn't be modified
     }
 
     return true;
