@@ -8,15 +8,26 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       if (turboVueEnabled) {
         modifyDOM();
+        document.addEventListener("scroll", modifyDOM);
+        document.addEventListener("click", modifyDOM);
+
       } else {
         restoreDOM();
+        document.removeEventListener("scroll", modifyDOM);
+        document.removeEventListener("click", modifyDOM);      
       }
 
     }
   });
 
   function modifyDOM() {
+
+    // Restore to previous state and reiterate over again in case, when DOM changes.
+    modifiedTextNodes.forEach(({ parent, node, span }) => {
+        parent.replaceChild(node, span);
+    });
     modifiedTextNodes = [];
+
     modifyTextNodes(document.body);
 
   }
@@ -82,13 +93,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     modifiedTextNodes.forEach(({ parent, node, span }) => {
       parent.replaceChild(node, span);
     });
+
     modifiedTextNodes = [];
   } 
 
   function checkParentNode(node) {
     const parentNode = node.parentNode.tagName.toLowerCase();
     if (parentNode === 'code' || parentNode === 'noscript') {
-      return false; // Skip text nodes inside <code> or <noscript>
+      return false; // Skip text nodes inside <code> or <noscript>.
     }
+
     return true;
   }
