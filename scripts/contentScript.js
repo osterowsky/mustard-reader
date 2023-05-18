@@ -100,7 +100,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } 
 
   function checkParentNode(node) {
-    const tags = ["code", "noscript", "pre", "h1", "h2", "h3"]
+    const tags = ["code", "noscript", "pre", "h1", "h2"]
     const parentNode = node.parentNode.tagName.toLowerCase();
 
     if (tags.includes(parentNode)) {
