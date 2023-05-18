@@ -25,6 +25,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     // Check if nodeType is textNode.
     if (node.nodeType === 3) {
+      if (!checkParentNode(node)) {
+        return;
+      }
+
       const modifiedText = modifyWords(node.textContent.trim().split(" "));
       const span = document.createElement('span');
       span.innerHTML = modifiedText;
@@ -73,3 +77,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   function restoreDOM() {
     document.body.innerHTML = defaultDOMState
   } 
+
+  function checkParentNode(node) {
+    const parentNode = node.parentNode.tagName.toLowerCase();
+    if (parentNode === 'code' || parentNode === 'noscript') {
+      return false; // Skip text nodes inside <code> or <noscript>
+    }
+    return true;
+  }
