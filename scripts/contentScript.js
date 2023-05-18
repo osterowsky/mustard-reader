@@ -1,5 +1,5 @@
 let turboVueEnabled = false;
-let defaultDOMState = document.body.innerHTML;
+let modifiedTextNodes = [];
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     
@@ -16,7 +16,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   });
 
   function modifyDOM() {
-
+    modifiedTextNodes = [];
     modifyTextNodes(document.body);
 
   }
@@ -32,11 +32,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       const modifiedText = modifyWords(node.textContent.trim().split(" "));
       const span = document.createElement('span');
       span.innerHTML = modifiedText;
-      node.parentNode.replaceChild(span, node);
 
+      const parent = node.parentNode;
+      parent.replaceChild(span, node);
+      modifiedTextNodes.push({ parent, node, span });
+      
     } else {
       node.childNodes.forEach(function(childNode) {
         modifyTextNodes(childNode);
+
       });
     }
 
@@ -75,7 +79,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 
   function restoreDOM() {
-    document.body.innerHTML = defaultDOMState
+    modifiedTextNodes.forEach(({ parent, node, span }) => {
+      parent.replaceChild(node, span);
+    });
+    modifiedTextNodes = [];
   } 
 
   function checkParentNode(node) {
