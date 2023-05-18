@@ -57,31 +57,33 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   }
 
+  function modifyWord(item) {
+
+    if (item.length == 1) {
+      return `<span style="font-weight: 600;">${item}</span>`;
+
+    } else if (item.length <= 3 && item.length != 1) {
+      return `<span style="font-weight: 600;">${item.substr(0, 1)}</span><span style="font-weight: 400;">${item.substr(1)}</span>`;
+
+    } else if (item.length > 3 && (item.length % 2 == 0)) {
+      return `<span style="font-weight: 600;">${item.substr(0, item.length / 2)}</span><span style="font-weight: 400;">${item.substr(item.length / 2)}</span>`;
+
+    } else {
+      return `<span style="font-weight: 600;">${item.substr(0, item.length / 2)}</span><span style="font-weight: 400;">${item.substr(item.length / 2)}</span>`;
+    }
+    
+  }
+
   function modifyWords(textNode) {
 
-    // If text consists just one word, does not make sense to change it, because in some cases it produces bugs. 
-    if (textNode.length == 1) {
-      return textNode
+    if (textNode.length === 1) {
+      return modifyWord(textNode[0]);
     }
 
     let modifiedText = '';
     textNode.forEach(function (item) {
-      let boldWord = '';
-    
-      if (item.length == 1) {
-        boldWord += `<span style="font-weight: 600;">${item}</span>`;
+      let boldWord = modifyWord(item)
 
-      } else if (item.length <= 3 && item.length != 1) {
-        boldWord += `<span style="font-weight: 600;">${item.substr(0, 1)}</span><span style="font-weight: 400;">${item.substr(1)}</span>`;
-
-      } else if (item.length > 3 && (item.length % 2 == 0)) {
-        boldWord += `<span style="font-weight: 600;">${item.substr(0, item.length / 2)}</span><span style="font-weight: 400;">${item.substr(item.length / 2)}</span>`;
-
-      } else {
-        boldWord += `<span style="font-weight: 600;">${item.substr(0, item.length / 2)}</span><span style="font-weight: 400;">${item.substr(item.length / 2)}</span>`;
-
-      }
-      
       modifiedText += boldWord + ' ';
     });
 
