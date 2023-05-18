@@ -1,6 +1,15 @@
+let turboVueEnabled = false;
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === "modifyDOM") {
-      modifyDOM();
+    if (message.action === "toggleTurboVue") {
+      turboVueEnabled = !turboVueEnabled
+
+      if (turboVueEnabled) {
+        modifyDOM();
+      } else {
+        
+      }
+
     }
   });
 
@@ -21,13 +30,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     } else {
       node.childNodes.forEach(function(childNode) {
-        modifyElementsContent(childNode);
+        modifyTextNodes(childNode);
       });
     }
 
   }
 
   function modifyWords(textNode) {
+
+    // If text consists just one word, does not make sense to change it
+    if (textNode.length == 1) {
+      return textNode
+    }
 
     let modifiedText = '';
     textNode.forEach(function (item) {

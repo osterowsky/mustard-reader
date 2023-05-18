@@ -18,6 +18,7 @@
         "128": "icons/icon128.png"
       },
     "action": {
+        "default_popup": "popup/popup.html",
         "default_icon": {
             "16": "icons/icon16.png",
             "32": "icons/icon32.png",
@@ -31,7 +32,8 @@
     "content_scripts": [
         {
           "matches": ["http://*/*", "https://*/*"],
-          "js": ["scripts/contentScript.js"]
+          "js": ["scripts/contentScript.js"],
+          "run_at": "document_idle"
         }
     ]
 }

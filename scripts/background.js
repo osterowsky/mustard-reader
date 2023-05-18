@@ -1,5 +1,3 @@
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete') {
-    chrome.tabs.sendMessage(tabId, { action: 'modifyDOM' });
-  }
+chrome.action.onClicked.addListener(function(tab) {
+  chrome.tabs.sendMessage(tab.id, { action: "toggleTurboVue" });
 });
