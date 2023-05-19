@@ -38,12 +38,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     // Check if nodeType is textNode.
     if (node.nodeType === 3) {
-      if (!checkParentNode(node)) {
+      if (!checkAncestors(node)) {
         return;
       }
 
       const modifiedText = modifyWords(node.textContent.trim().split(" "));
-      console.log(modifyWords(node.textContent.trim().split(" ")));
       const span = document.createElement('span');
       span.innerHTML = modifiedText;
 
@@ -62,7 +61,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   }
 
-
   function restoreDOM() {
     modifiedTextNodes.forEach(({ parent, node, span }) => {
       if (parent.contains(span)) {
@@ -76,18 +74,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // Section to validate translated elements.
   // ----
 
-  function checkParentNode(node) {
+  function checkAncestors(node) {
     const tags = ["code", "noscript", "pre", "h1", "h2"]
-    const parentNode = node.parentNode.tagName.toLowerCase();
+    let ancestor = node.parentNode;
 
-    if (tags.includes(parentNode)) {
-      return false; // Skip text nodes inside tags, which shouldn't be modified
+    while (ancestor !== null) {
+      const tagName = ancestor.tagName ? ancestor.tagName.toLowerCase() : null;
+      if (tags.includes(tagName)) {
+        return false; // Skip text nodes inside tags that shouldn't be modified
+      }
+
+      ancestor = ancestor.parentNode;
     }
-
+    
     return true;
   }
-
-
 
   // Words modifications algorithms.
   // ----
@@ -104,17 +105,38 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
 function modifyWord(item) {
+
+    // We subsract beggining if it is not alphanumeric.
+    let boldWord = substractNonAlpha(item);
+    if (boldWord) {
+      item = item.substr(boldWord.length)
+    }
+
     if (item.length == 1) {
-      return `<span style="font-weight: 600;">${item}</span>`;
+      boldWord += `<span style="font-weight: 600;">${item}</span>`;
 
     } else if (item.length <= 3 && item.length != 1) {
-      return `<span style="font-weight: 600;">${item.substr(0, 1)}</span><span style="font-weight: 400;">${item.substr(1)}</span>`;
+      boldWord += `<span style="font-weight: 600;">${item.substr(0, 1)}</span><span style="font-weight: 400;">${item.substr(1)}</span>`;
 
     } else if (item.length > 3 && (item.length % 2 == 0)) {
-      return `<span style="font-weight: 600;">${item.substr(0, item.length / 2)}</span><span style="font-weight: 400;">${item.substr(item.length / 2)}</span>`;
+      boldWord += `<span style="font-weight: 600;">${item.substr(0, item.length / 2)}</span><span style="font-weight: 400;">${item.substr(item.length / 2)}</span>`;
 
     } else {
-      return `<span style="font-weight: 600;">${item.substr(0, item.length / 2)}</span><span style="font-weight: 400;">${item.substr(item.length / 2)}</span>`;
+      boldWord += `<span style="font-weight: 600;">${item.substr(0, item.length / 2)}</span><span style="font-weight: 400;">${item.substr(item.length / 2)}</span>`;
     }
-    
+
+    return boldWord;
+  }
+
+
+  function substractNonAlpha(item) {
+
+    // Regex expression to match any non Unicode number or non Unicode letter.
+    const nonAlphanumericRegex = /^[^\p{L}\p{N}]+/u;
+    const match = item.match(nonAlphanumericRegex);
+    if (match) {
+      return match[0];
+    } else {
+      return '';
+    }
   }
