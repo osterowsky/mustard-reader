@@ -24,7 +24,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     // Restore to previous state and reiterate over again in case, when DOM changes.
     modifiedTextNodes.forEach(({ parent, node, span }) => {
+      if (parent.contains(span)) {
         parent.replaceChild(node, span);
+      }
     });
     modifiedTextNodes = [];
 
@@ -45,7 +47,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       span.innerHTML = modifiedText;
 
       const parent = node.parentNode;
-      parent.replaceChild(span, node);
+      if (parent.contains(node)) {
+        parent.replaceChild(span, node);
+      }
       modifiedTextNodes.push({ parent, node, span });
       
     } else {
@@ -58,7 +62,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   function modifyWord(item) {
-
     if (item.length == 1) {
       return `<span style="font-weight: 600;">${item}</span>`;
 
@@ -75,11 +78,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   function modifyWords(textNode) {
-
-    if (textNode.length === 1) {
-      return modifyWord(textNode[0]);
-    }
-
     let modifiedText = '';
     textNode.forEach(function (item) {
       let boldWord = modifyWord(item)
@@ -93,7 +91,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   function restoreDOM() {
     modifiedTextNodes.forEach(({ parent, node, span }) => {
-      parent.replaceChild(node, span);
+      if (parent.contains(span)) {
+        parent.replaceChild(node, span);
+      }
     });
 
     modifiedTextNodes = [];
