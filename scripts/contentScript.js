@@ -43,6 +43,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
 
       const modifiedText = modifyWords(node.textContent.trim().split(" "));
+      console.log(modifyWords(node.textContent.trim().split(" ")));
       const span = document.createElement('span');
       span.innerHTML = modifiedText;
 
@@ -61,7 +62,48 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   }
 
-  function modifyWord(item) {
+
+  function restoreDOM() {
+    modifiedTextNodes.forEach(({ parent, node, span }) => {
+      if (parent.contains(span)) {
+        parent.replaceChild(node, span);
+      }
+    });
+
+    modifiedTextNodes = [];
+  } 
+
+  // Section to validate translated elements.
+  // ----
+
+  function checkParentNode(node) {
+    const tags = ["code", "noscript", "pre", "h1", "h2"]
+    const parentNode = node.parentNode.tagName.toLowerCase();
+
+    if (tags.includes(parentNode)) {
+      return false; // Skip text nodes inside tags, which shouldn't be modified
+    }
+
+    return true;
+  }
+
+
+
+  // Words modifications algorithms.
+  // ----
+
+  function modifyWords(textNode) {
+    let modifiedText = '';
+    textNode.forEach(function (item) {
+      let boldWord = modifyWord(item)
+
+      modifiedText += boldWord + ' ';
+    });
+
+    return modifiedText;
+  }
+
+function modifyWord(item) {
     if (item.length == 1) {
       return `<span style="font-weight: 600;">${item}</span>`;
 
@@ -75,37 +117,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       return `<span style="font-weight: 600;">${item.substr(0, item.length / 2)}</span><span style="font-weight: 400;">${item.substr(item.length / 2)}</span>`;
     }
     
-  }
-
-  function modifyWords(textNode) {
-    let modifiedText = '';
-    textNode.forEach(function (item) {
-      let boldWord = modifyWord(item)
-
-      modifiedText += boldWord + ' ';
-    });
-
-    return modifiedText;
-  }
-
-
-  function restoreDOM() {
-    modifiedTextNodes.forEach(({ parent, node, span }) => {
-      if (parent.contains(span)) {
-        parent.replaceChild(node, span);
-      }
-    });
-
-    modifiedTextNodes = [];
-  } 
-
-  function checkParentNode(node) {
-    const tags = ["code", "noscript", "pre", "h1", "h2"]
-    const parentNode = node.parentNode.tagName.toLowerCase();
-
-    if (tags.includes(parentNode)) {
-      return false; // Skip text nodes inside tags, which shouldn't be modified
-    }
-
-    return true;
   }
