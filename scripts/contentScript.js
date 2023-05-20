@@ -51,20 +51,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       modifiedTextNodes.push({ parent, node, span });
       
     } else {
-      node.childNodes.forEach(function(childNode) {
+      for (const childNode of node.childNodes) {
         modifyTextNodes(childNode);
-
-      });
+      }
     }
 
   }
 
   function restoreDOM() {
-    modifiedTextNodes.forEach(({ parent, node, span }) => {
+    for (const { parent, node, span } of modifiedTextNodes) {
       if (parent.contains(span)) {
         parent.replaceChild(node, span);
       }
-    });
+    }  
 
     modifiedTextNodes = [];
   } 
@@ -73,12 +72,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // ----
 
   function checkAncestors(node) {
-    const tags = ["code", "noscript", "pre", "cite", "script", "nav", "header", "footer", "q", "strong", "style", "tfoot", "thead", "svg", "i", "button", "h1", "h2", "input", "abbr", "address", "blockquote", "img"]
+    const tags = new Set(["code", "noscript", "pre", "cite", "script", "nav", "header", "footer", "q", "strong", "style", "tfoot", "thead", "svg", "i", "button", "h1", "h2", "input", "abbr", "address", "blockquote", "img"])
     let ancestor = node.parentNode;
 
     while (ancestor !== null) {
       const tagName = ancestor.tagName ? ancestor.tagName.toLowerCase() : null;
-      if (tags.includes(tagName)) {
+      if (tags.has(tagName)) {
         return false; // Skip text nodes inside tags that shouldn't be modified
       }
 
@@ -93,11 +92,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   function modifyWords(textNode) {
     let modifiedText = '';
-    textNode.forEach(function (item) {
-      let boldWord = modifyWord(item)
-
+    for (const item of textNode) {
+      let boldWord = modifyWord(item);
       modifiedText += boldWord + ' ';
-    });
+    }
 
     return modifiedText;
   }
