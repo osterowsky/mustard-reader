@@ -46,6 +46,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       const parent = node.parentNode;
       if (parent.contains(node)) {
+        console.log(node);
+        console.log('\n\n');
+        console.log(span);
         parent.replaceChild(span, node);
       }
       modifiedTextNodes.push({ parent, node, span });
@@ -73,7 +76,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // ----
 
   function checkAncestors(node) {
-    const tags = ["code", "noscript", "pre", "h1", "h2"]
+    const tags = ["code", "noscript", "pre", "cite", "nav", "header", "footer", "q", "strong", "style", "tfoot", "thead", "svg", "i", "button", "h1", "h2", "input", "abbr", "address", "blockquote", "img"]
     let ancestor = node.parentNode;
 
     while (ancestor !== null) {
@@ -102,7 +105,49 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return modifiedText;
   }
 
-/* function modifyWord2(item) {
+  function modifyWord(item) {
+    let boldWord = substractNonAlpha(item);
+    if (boldWord) {
+      item = item.substr(boldWord.length);
+    }
+  
+    if (item.length == 1) {
+      return item;
+    } else if (item.length == 2) {
+      boldWord += `<span style="font-weight: 700;">${item}</span>`;
+    } else if (item.length == 3) {
+      boldWord += `<span style="font-weight: 400;">${item[0]}</span><span style="font-weight: 700;">${item[1]}</span><span style="font-weight: 400;">${item[2]}</span>`;
+    } else if (item.length >= 4) {
+      const firstQuarter = Math.floor(item.length / 4);
+      const secondQuarter = Math.ceil(item.length / 2);
+      const thirdQuarter = Math.ceil((item.length * 3) / 4);
+
+      const firstPart = item.substr(0, firstQuarter);
+      const secondPart = item.substr(firstQuarter, secondQuarter - firstQuarter);
+      const thirdPart = item.substr(secondQuarter, thirdQuarter - secondQuarter);
+      const fourthPart = item.substr(thirdQuarter);
+
+      boldWord += `<span style="font-weight: 700;">${firstPart}</span><span style="font-weight: 400;">${secondPart}</span><span style="font-weight: 700;">${thirdPart}</span><span style="font-weight: 400;">${fourthPart}</span>`;
+    }
+  
+    return boldWord;
+  }
+  
+  
+
+  function substractNonAlpha(item) {
+
+    // Regex expression to match any non Unicode number or non Unicode letter.
+    const nonAlphanumericRegex = /^[^\p{L}\p{N}]+/u;
+    const match = item.match(nonAlphanumericRegex);
+    if (match) {
+      return match[0];
+    } else {
+      return '';
+    }
+  }
+
+  /* function modifyWord2(item) {
 
     // We subsract beggining if it is not alphanumeric.
     let boldWord = substractNonAlpha(item);
@@ -126,43 +171,3 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return boldWord;
   }
 */
-
-  function modifyWord(item) {
-    let boldWord = substractNonAlpha(item);
-    if (boldWord) {
-      item = item.substr(boldWord.length);
-    }
-  
-    if (item.length == 2) {
-      boldWord += `<span style="font-weight: 600;">${item}</span>`;
-    } else if (item.length == 3) {
-      boldWord += `<span style="font-weight: 400;">${item[0]}</span><span style="font-weight: 600;">${item[1]}</span><span style="font-weight: 400;">${item[2]}</span>`;
-    } else if (item.length >= 4) {
-      const firstQuarter = Math.floor(item.length / 4);
-      const secondQuarter = Math.ceil(item.length / 2);
-      const thirdQuarter = Math.ceil((item.length * 3) / 4);
-
-      const firstPart = item.substr(0, firstQuarter);
-      const secondPart = item.substr(firstQuarter, secondQuarter - firstQuarter);
-      const thirdPart = item.substr(secondQuarter, thirdQuarter - secondQuarter);
-      const fourthPart = item.substr(thirdQuarter);
-
-      boldWord += `<span style="font-weight: 600;">${firstPart}</span><span style="font-weight: 400;">${secondPart}</span><span style="font-weight: 600;">${thirdPart}</span><span style="font-weight: 400;">${fourthPart}</span>`;
-    }
-  
-    return boldWord;
-  }
-  
-  
-
-  function substractNonAlpha(item) {
-
-    // Regex expression to match any non Unicode number or non Unicode letter.
-    const nonAlphanumericRegex = /^[^\p{L}\p{N}]+/u;
-    const match = item.match(nonAlphanumericRegex);
-    if (match) {
-      return match[0];
-    } else {
-      return '';
-    }
-  }
