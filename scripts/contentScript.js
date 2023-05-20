@@ -35,7 +35,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   function modifyTextNodes(node) {
 
     // Check if nodeType is textNode.
-    if (node.nodeType === 3) {
+    if (node.nodeType === 3 && node.textContent.trim().length != 0) {
       if (!checkAncestors(node)) {
         return;
       }
@@ -46,9 +46,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       const parent = node.parentNode;
       if (parent.contains(node)) {
-        console.log(node);
-        console.log('\n\n');
-        console.log(span);
         parent.replaceChild(span, node);
       }
       modifiedTextNodes.push({ parent, node, span });
@@ -76,7 +73,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // ----
 
   function checkAncestors(node) {
-    const tags = ["code", "noscript", "pre", "cite", "nav", "header", "footer", "q", "strong", "style", "tfoot", "thead", "svg", "i", "button", "h1", "h2", "input", "abbr", "address", "blockquote", "img"]
+    const tags = ["code", "noscript", "pre", "cite", "script", "nav", "header", "footer", "q", "strong", "style", "tfoot", "thead", "svg", "i", "button", "h1", "h2", "input", "abbr", "address", "blockquote", "img"]
     let ancestor = node.parentNode;
 
     while (ancestor !== null) {
