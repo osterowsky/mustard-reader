@@ -1,5 +1,6 @@
 let turboVueEnabled = false;
 let modifiedTextNodes = [];
+let observer = null;
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     
@@ -8,15 +9,36 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       if (turboVueEnabled) {
         modifyDOM();
-        document.addEventListener("scroll", modifyDOM);
-
+        observer = observeDOMChanges();
       } else {
+        disconnectObserver();
         restoreDOM();
-        document.removeEventListener("scroll", modifyDOM);
       }
 
     }
   });
+
+  function observeDOMChanges() {
+    let observer = new MutationObserver(mutations => {
+      console.log("DOM modified");
+      disconnectObserver();
+    })
+    const config = {
+      childList: true,
+      subtree: true,
+    };
+
+    observer.observe(document.body, config)
+    return observer;
+  }
+
+  function disconnectObserver() {
+    if (observer) {
+      console.log("disconnect")
+      observer.disconnect();
+      observer = null;
+    }
+  }
 
   function modifyDOM() {
 
