@@ -66,7 +66,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   function disconnectObserver() {
     if (observer) {
-      console.log("disconnect")
       observer.disconnect();
       observer = null;
     }
@@ -74,12 +73,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   function modifyNewTextNode(node) {
 
-    // We deconnect observer to not find false signal, which is our own span, which we add to DOM.
+    // We deconnect observer to not find false signal, which is our own created span, which we add to DOM.
     if (observer) {
       disconnectObserver();
     }
-    
-    console.log('A text node was added:', node.textContent);
+
     modifyTextNode(node)
 
     if (!observer) {
