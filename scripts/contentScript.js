@@ -179,7 +179,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     } else if (item.length >= 4) {
       const firstQuarter = Math.floor(item.length / 4);
       const secondQuarter = Math.ceil(item.length / 2);
-      const thirdQuarter = Math.ceil((item.length * 3) / 4);
+      const thirdQuarter = Math.floor((item.length * 3) / 4);
 
       const firstPart = item.substr(0, firstQuarter);
       const secondPart = item.substr(firstQuarter, secondQuarter - firstQuarter);
