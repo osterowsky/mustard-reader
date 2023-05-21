@@ -1,6 +1,10 @@
 let turboVueEnabled = false;
 let modifiedTextNodes = [];
 let observer = null;
+const config = {
+  childList: true,
+  subtree: true,
+};
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     
@@ -54,11 +58,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           traverseAndCheckChildren(childNode);
         }
       }
-    }
-
-    const config = {
-        childList: true,
-        subtree: true,
     }
 
     observer.observe(document.body, config)
@@ -116,15 +115,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     span.classList.add("turbo-vue")
 
     const parent = node.parentNode;
-    if (parent.contains(node)) {
+    if (parent && parent.contains(node)) {
       parent.replaceChild(span, node);
     }
     modifiedTextNodes.push({ parent, node, span });
   }
 
+  // Section to restore DOM to primary version
+  // ----
+
   function restoreDOM() {
     for (const { parent, node, span } of modifiedTextNodes) {
-      if (parent.contains(span)) {
+      if (parent && parent.contains(span)) {
         parent.replaceChild(node, span);
       }
     }  
