@@ -119,20 +119,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     modifiedTextNodes.push({ parent, node, span });
   }
 
-  // Section to restore DOM to primary version
-  // ----
-
-  function restoreDOM() {
-    for (const { parent, node, span } of modifiedTextNodes) {
-      if (parent && parent.contains(span)) {
-        parent.replaceChild(node, span);
-      }
-    }  
-
-    modifiedTextNodes = [];
-  } 
-
-  // Section to validate translated elements.
+  // Section to validate elements to modify.
   // ----
 
   function checkAncestors(node) {
@@ -151,7 +138,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 
-  // Words modifications algorithms.
+  // Section for words modifications.
   // ----
 
   function modifyWords(textNode) {
@@ -204,27 +191,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
   }
 
-  /* function modifyWord2(item) {
+  // Section to restore DOM to primary version.
+  // ----
 
-    // We subsract beggining if it is not alphanumeric.
-    let boldWord = substractNonAlpha(item);
-    if (boldWord) {
-      item = item.substr(boldWord.length)
-    }
+  function restoreDOM() {
+    for (const { parent, node, span } of modifiedTextNodes) {
+      if (parent && parent.contains(span)) {
+        parent.replaceChild(node, span);
+      }
+    }  
 
-    if (item.length == 1) {
-      boldWord += `<span style="font-weight: 600;">${item}</span>`;
-
-    } else if (item.length <= 3 && item.length != 1) {
-      boldWord += `<span style="font-weight: 600;">${item.substr(0, 1)}</span><span style="font-weight: 400;">${item.substr(1)}</span>`;
-
-    } else if (item.length > 3 && (item.length % 2 == 0)) {
-      boldWord += `<span style="font-weight: 600;">${item.substr(0, item.length / 2)}</span><span style="font-weight: 400;">${item.substr(item.length / 2)}</span>`;
-
-    } else {
-      boldWord += `<span style="font-weight: 600;">${item.substr(0, item.length / 2)}</span><span style="font-weight: 400;">${item.substr(item.length / 2)}</span>`;
-    }
-
-    return boldWord;
-  }
-*/
+    modifiedTextNodes = [];
+  } 
