@@ -18,6 +18,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
   });
 
+  // Section for dynamic content.
+  // ----
+
   function observeDOMChanges() {
     const observer = new MutationObserver(function(mutationsList, observer) {
       for (let mutation of mutationsList) {
@@ -29,8 +32,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
               if (!checkAncestors(node)) {
                 return;
               }
-              console.log('A text node was added:', node.textContent);
-              modifyTextNode(node)
+              modifyNewTextNode(node);
+              
             } else if (node.nodeType === Node.ELEMENT_NODE) {
               traverseAndCheckChildren(node)
             }
@@ -44,8 +47,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (!checkAncestors(node)) {
           return;
         }
-        console.log(node.textContent)
-        modifyTextNode(node)
+        modifyNewTextNode(node);
+
       } else if (node.nodeType === Node.ELEMENT_NODE ) {
         for (let childNode of node.childNodes) {
           traverseAndCheckChildren(childNode);
@@ -70,6 +73,24 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
   }
 
+  function modifyNewTextNode(node) {
+
+    // We deconnect observer to not find false signal, which is our own span, which we add to DOM.
+    if (observer) {
+      disconnectObserver();
+    }
+    
+    console.log('A text node was added:', node.textContent);
+    modifyTextNode(node)
+
+    if (!observer) {
+      observer = observeDOMChanges();
+    }
+  }
+
+  // Section for modification of nodes.
+  // ----
+
   function modifyTextNodes(node) {
 
     // Check if nodeType is textNode.
@@ -89,10 +110,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   function modifyTextNode(node) {
 
-    if (observer) {
-      disconnectObserver();
-    }
-
     const modifiedText = modifyWords(node.textContent.trim().split(" "));
     const span = document.createElement('span');
     span.innerHTML = modifiedText;
@@ -103,10 +120,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       parent.replaceChild(span, node);
     }
     modifiedTextNodes.push({ parent, node, span });
-
-    if (!observer) {
-      observer = observeDOMChanges();
-    }
   }
 
   function restoreDOM() {
@@ -178,8 +191,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   
     return boldWord;
   }
-  
-  
 
   function substractNonAlpha(item) {
 
