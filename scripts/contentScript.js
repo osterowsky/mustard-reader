@@ -8,7 +8,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       turboVueEnabled = !turboVueEnabled
 
       if (turboVueEnabled) {
-        modifyDOM();
+        modifyTextNodes(document.body);
         observer = observeDOMChanges();
       } else {
         disconnectObserver();
@@ -19,14 +19,44 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   });
 
   function observeDOMChanges() {
-    let observer = new MutationObserver(mutations => {
-      console.log("DOM modified");
-      disconnectObserver();
-    })
+    const observer = new MutationObserver(function(mutationsList, observer) {
+      for (let mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+          // Check if addedNodes contain text nodes
+          const addedNodes = mutation.addedNodes;
+          for (let node of addedNodes) {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length != 0) {
+              if (!checkAncestors(node)) {
+                return;
+              }
+              console.log('A text node was added:', node.textContent);
+              modifyTextNode(node)
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+              traverseAndCheckChildren(node)
+            }
+          }
+        }
+      }
+    });
+
+    function traverseAndCheckChildren(node) {
+      if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length != 0) {
+        if (!checkAncestors(node)) {
+          return;
+        }
+        console.log(node.textContent)
+        modifyTextNode(node)
+      } else if (node.nodeType === Node.ELEMENT_NODE ) {
+        for (let childNode of node.childNodes) {
+          traverseAndCheckChildren(childNode);
+        }
+      }
+    }
+
     const config = {
-      childList: true,
-      subtree: true,
-    };
+        childList: true,
+        subtree: true,
+    }
 
     observer.observe(document.body, config)
     return observer;
@@ -40,20 +70,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
   }
 
-  function modifyDOM() {
-
-    // Restore to previous state and reiterate over again in case, when DOM changes.
-    modifiedTextNodes.forEach(({ parent, node, span }) => {
-      if (parent.contains(span)) {
-        parent.replaceChild(node, span);
-      }
-    });
-    modifiedTextNodes = [];
-
-    modifyTextNodes(document.body);
-
-  }
-
   function modifyTextNodes(node) {
 
     // Check if nodeType is textNode.
@@ -61,23 +77,36 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (!checkAncestors(node)) {
         return;
       }
-
-      const modifiedText = modifyWords(node.textContent.trim().split(" "));
-      const span = document.createElement('span');
-      span.innerHTML = modifiedText;
-
-      const parent = node.parentNode;
-      if (parent.contains(node)) {
-        parent.replaceChild(span, node);
-      }
-      modifiedTextNodes.push({ parent, node, span });
+      modifyTextNode(node)
       
     } else {
       for (const childNode of node.childNodes) {
         modifyTextNodes(childNode);
       }
     }
+    return;
+  }
 
+  function modifyTextNode(node) {
+
+    if (observer) {
+      disconnectObserver();
+    }
+
+    const modifiedText = modifyWords(node.textContent.trim().split(" "));
+    const span = document.createElement('span');
+    span.innerHTML = modifiedText;
+    span.classList.add("turbo-vue")
+
+    const parent = node.parentNode;
+    if (parent.contains(node)) {
+      parent.replaceChild(span, node);
+    }
+    modifiedTextNodes.push({ parent, node, span });
+
+    if (!observer) {
+      observer = observeDOMChanges();
+    }
   }
 
   function restoreDOM() {
@@ -99,7 +128,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     while (ancestor !== null) {
       const tagName = ancestor.tagName ? ancestor.tagName.toLowerCase() : null;
-      if (tags.has(tagName)) {
+      if (tags.has(tagName) || (ancestor.classList && ancestor.classList.contains("turbo-vue"))) {
         return false; // Skip text nodes inside tags that shouldn't be modified
       }
 
