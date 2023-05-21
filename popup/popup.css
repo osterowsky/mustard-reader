@@ -1,0 +1,133 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #FFF3B7;
+    margin: 5px 20px;
+    justify-content: center;
+    width: 200px;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 5px;
+    height: auto;
+}
+
+#myLogo {
+  transform: scale(0.8);
+}
+
+/* Toggle Section. */
+/* ----- */
+
+.toggler-section {
+  margin: 0px 0px 10px;
+}
+
+.card-column {
+    flex-grow: 1;
+    padding: 5px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+/* Section for card element. */
+/* ----- */
+
+.card-element {
+    background-color: #FFFDF5;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    box-shadow: 1px 1px 2px black;
+  }
+
+/* Section for card element. */
+/* ----- */
+
+.footer-section {
+    text-align: center;
+}
+
+.card-container {
+    margin: 10px auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Section for text. */
+/* ----- */
+h2, h3 {
+    font-family: 'Montserrat';
+    font-weight: 600;
+}

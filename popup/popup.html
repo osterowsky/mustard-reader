@@ -2,10 +2,45 @@
 <html>
 <head>
   <title>TurboVue</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="popup.js"></script>
+  <link rel="stylesheet" href="popup.css" type="text/css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900">
 </head>
-<body>
-  <h1>TurboVue</h1>
-  <button id="toggleButton">Toggle TurboVue</button>
-</body>
+  <body>
+
+      <header>
+        <img src="../assets/turbo-vue-logo.png" alt="TurboVue Logo" id="myLogo">
+      </header>
+
+      <div class="toggler-section">
+        <div class="card-element">
+          <div class="card-column">
+            <h3 id="toggleText">
+              Turn us
+            </h3>
+          </div>
+    
+          <div class="card-column">
+            <label class="switch">
+              <input type="checkbox" id="toggleButton">
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h2>Do you enjoy using TurboVUE?</h2>
+        <div class="card-container">
+          <div class="card-element">
+            <h3>Submit Feedback</h3>
+          </div>
+
+          <div class="card-element">
+            <h3>Rate us!</h3>
+          </div>
+        </div>
+      </div>
+
 </html>
