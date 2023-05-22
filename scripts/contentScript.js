@@ -107,7 +107,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   function modifyTextNode(node) {
 
-    const modifiedText = modifyWords(node.textContent.trim().split(" "));
+    const modifiedText = modifyWords(node.textContent.trimRight().split(" "));
     const span = document.createElement('span');
     span.innerHTML = modifiedText;
     span.classList.add("turbo-vue")
@@ -172,7 +172,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       const secondPart = item.substr(firstQuarter, secondQuarter - firstQuarter);
       const thirdPart = item.substr(secondQuarter, thirdQuarter - secondQuarter);
       const fourthPart = item.substr(thirdQuarter);
-      
+
       boldWord += `<span style="font-weight: 700;">${firstPart}</span><span style="font-weight: 400;">${secondPart}</span><span style="font-weight: 700;">${thirdPart}</span><span style="font-weight: 400;">${fourthPart}</span>`;
     }
   
@@ -202,4 +202,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }  
 
     modifiedTextNodes = [];
-  } 
+  }
