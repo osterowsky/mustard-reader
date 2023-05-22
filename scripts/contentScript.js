@@ -123,7 +123,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // ----
 
   function checkAncestors(node) {
-    const tags = new Set(["code", "noscript", "cite", "script", "nav", "header", "footer", "q", "strong", "style", "tfoot", "thead", "svg", "button", "h1", "h2", "input", "abbr", "address", "blockquote", "img"])
+    const tags = new Set(["code", "noscript", "cite", "script", "nav", "header", "footer", "q", "strong", "style", "tfoot", "thead", "svg", "button", "h1", "h2", "input", "abbr", "address", "img"])
     let ancestor = node.parentNode;
 
     while (ancestor !== null) {
