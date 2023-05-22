@@ -127,7 +127,13 @@ header {
 
 /* Section for text. */
 /* ----- */
-h2, h3 {
+
+h2 {
+  font-family: 'Poppins';
+  font-weight: 700;
+}
+
+h3 {
     font-family: 'Montserrat';
     font-weight: 600;
 }
