@@ -123,7 +123,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // ----
 
   function checkAncestors(node) {
-    const tags = new Set(["code", "noscript", "pre", "cite", "script", "nav", "header", "footer", "q", "strong", "style", "tfoot", "thead", "svg", "i", "button", "h1", "h2", "input", "abbr", "address", "blockquote", "img"])
+    const tags = new Set(["code", "noscript", "cite", "script", "nav", "header", "footer", "q", "strong", "style", "tfoot", "thead", "svg", "button", "h1", "h2", "input", "abbr", "address", "blockquote", "img"])
     let ancestor = node.parentNode;
 
     while (ancestor !== null) {
@@ -166,13 +166,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     } else if (item.length >= 4) {
       const firstQuarter = Math.floor(item.length / 4);
       const secondQuarter = Math.ceil(item.length / 2);
-      const thirdQuarter = Math.floor((item.length * 3) / 4);
+      const thirdQuarter = Math.ceil((item.length * 3) / 4);
 
       const firstPart = item.substr(0, firstQuarter);
       const secondPart = item.substr(firstQuarter, secondQuarter - firstQuarter);
       const thirdPart = item.substr(secondQuarter, thirdQuarter - secondQuarter);
       const fourthPart = item.substr(thirdQuarter);
-
+      
       boldWord += `<span style="font-weight: 700;">${firstPart}</span><span style="font-weight: 400;">${secondPart}</span><span style="font-weight: 700;">${thirdPart}</span><span style="font-weight: 400;">${fourthPart}</span>`;
     }
   
