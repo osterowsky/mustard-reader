@@ -5,9 +5,7 @@
     "version": "0.1.0",
     "author": "Patryk Ostern",
     "permissions": [
-        "tabs"
-    ],
-    "host_permissions": [
+        "tabs",
         "activeTab"
     ],
     "icons": {
