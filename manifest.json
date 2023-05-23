@@ -8,8 +8,7 @@
         "tabs"
     ],
     "host_permissions": [
-        "http://*/*", 
-        "https://*/*"
+        "activeTab"
     ],
     "icons": {
         "16": "icons/icon16.png",
