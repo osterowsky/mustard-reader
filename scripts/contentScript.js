@@ -160,9 +160,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (item.length == 1) {
       return item;
     } else if (item.length == 2) {
-      boldWord += `<span style="font-weight: 700;">${item}</span>`;
+      boldWord += `<span style="font-weight: 600;">${item}</span>`;
     } else if (item.length == 3) {
-      boldWord += `<span style="font-weight: 400;">${item[0]}</span><span style="font-weight: 700;">${item[1]}</span><span style="font-weight: 400;">${item[2]}</span>`;
+      boldWord += `<span style="font-weight: 400;">${item[0]}</span><span style="font-weight: 600;">${item[1]}</span><span style="font-weight: 400;">${item[2]}</span>`;
     } else if (item.length >= 4) {
       const firstQuarter = Math.floor(item.length / 4);
       const secondQuarter = Math.ceil(item.length / 2);
@@ -173,7 +173,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       const thirdPart = item.substr(secondQuarter, thirdQuarter - secondQuarter);
       const fourthPart = item.substr(thirdQuarter);
 
-      boldWord += `<span style="font-weight: 700;">${firstPart}</span><span style="font-weight: 400;">${secondPart}</span><span style="font-weight: 700;">${thirdPart}</span><span style="font-weight: 400;">${fourthPart}</span>`;
+      boldWord += `<span style="font-weight: 600;">${firstPart}</span><span style="font-weight: 400;">${secondPart}</span><span style="font-weight: 600;">${thirdPart}</span><span style="font-weight: 400;">${fourthPart}</span>`;
     }
   
     return boldWord;
