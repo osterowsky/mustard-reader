@@ -5,7 +5,6 @@
     "version": "0.1.0",
     "author": "Patryk Ostern",
     "permissions": [
-        "tabs",
         "activeTab"
     ],
     "host_permissions": [
