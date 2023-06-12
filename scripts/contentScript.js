@@ -1,4 +1,4 @@
-let turboVueEnabled = false;
+let mustardReaderEnabled = false;
 let modifiedTextNodes = [];
 let observer = null;
 const config = {
@@ -8,10 +8,10 @@ const config = {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     
-  if (message.action === "toggleTurboVue") {
-      turboVueEnabled = !turboVueEnabled
+  if (message.action === "toggleMustardReader") {
+      mustardReaderEnabled = !mustardReaderEnabled
 
-      if (turboVueEnabled) {
+      if (mustardReaderEnabled) {
         modifyTextNodes(document.body);
         observer = observeDOMChanges();
       } else {
