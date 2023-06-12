@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "TurboVue",
-    "description": "Be faster than Usain Bolt, read always with TurboVue",
+    "name": "MustardReader",
+    "description": "Be faster than fasting, read always with MustardReader",
     "version": "0.1.0",
     "author": "Patryk Ostern",
     "permissions": [
