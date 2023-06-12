@@ -4,10 +4,10 @@
 }
 
 body {
-    background-color: #FCDD6C;
-    margin: 5px 20px;
+    background-color: #ffffdb;
+    padding: 20px 20px;
     justify-content: center;
-    width: 200px;
+    width: 240px;
 }
 
 header {
@@ -15,7 +15,6 @@ header {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    margin: 5px;
     height: auto;
 }
 
@@ -73,11 +72,11 @@ header {
   }
   
   input:checked + .slider {
-    background-color: #2196F3;
+    background-color: #f9ca24; 
   }
   
   input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px #f9ca24;
   }
   
   input:checked + .slider:before {
@@ -99,7 +98,7 @@ header {
 /* ----- */
 
 .card-element {
-    background-color: #FFFDF5;
+    background-color: #f6e58d;
     border-radius: 10px;
     padding: 5px;
     margin: 5px;
@@ -109,11 +108,16 @@ header {
     justify-content: center;
     align-items: center;
     flex: 1;
-    box-shadow: 1px 1px 2px black;
+    box-shadow: 0 5px #f9ca24;
+    transition: all 0.3s ease-in-out;
   }
 
-/* Section for card element. */
-/* ----- */
+#toggle-card-element:hover {
+  transform: scale(1.0);
+}
+.card-element:hover {
+  transform: scale(1.1);
+}
 
 .footer-section {
     text-align: center;
@@ -131,9 +135,10 @@ header {
 h2 {
   font-family: 'Poppins';
   font-weight: 600;
+  padding: 10px 0px;
 }
 
 h3 {
     font-family: 'Montserrat';
-    font-weight: 500;
+    font-weight: 600;
 }
