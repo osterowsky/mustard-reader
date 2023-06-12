@@ -109,8 +109,8 @@ header {
     align-items: center;
     flex: 1;
     box-shadow: 0 5px #f9ca24;
-    transition: all 0.3s ease-in-out;
-  }
+    transition: transform 0.3s ease-in-out;
+}
 
 #toggle-card-element:hover {
   transform: scale(1.0);
