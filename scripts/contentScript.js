@@ -79,10 +79,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     modifyTextNode(node)
-
-    if (!observer) {
-      observer = observeDOMChanges();
-    }
+    observer = observeDOMChanges();
   }
 
   // Section for modification of nodes.
