@@ -1,6 +1,6 @@
 # Mustard Reader - Chrome Extension
 
-Mustard Reader is a Chrome extension designed to enhance reading speed and comprehension.
+Mustard Reader is a Chrome extension designed to enhance reading speed through the algoritm to bold right parts of the word
 
 ## Table of Contents
 
